@@ -1,24 +1,34 @@
 import logo from './logo.svg';
 import './App.css';
-import NavBar from './components/NavBar/NavBar.js';
+import NavBar from './components/NavBar/NavBar';
+import ItemListContainer from './components/ItemListContainer/ItemListContainer';
+import contador from './components/Counter/ItemCount';
+
+
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <NavBar />
+        <header className="App-header">
+            <Switch>
+              <Route path="/item/:id" >
+                <ItemDetailContainer />
+              </Route>
+              <Route path="/category/:name" >
+                <ItemListContainer />
+              </Route>
+              <Route exact path="/">
+                <ItemListContainer />
+              </Route>
+              <Route path="*">
+                Comming soon
+              </Route>
+            </Switch>
+        </header>
+      </BrowserRouter>
     </div>
   );
 }

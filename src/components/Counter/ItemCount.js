@@ -1,46 +1,21 @@
-import React, {useState} from "react";
+import { useState } from 'react'
 
-function contador ({stock,initial}){
-    let [count,setCount] = useState(initial);
-    let [newStock,setNewStock] = useState(stock);
-
-   
-    function addclick(){
-        if (count < newStock){
-            setCount (count +1)
-        }
-    }
-
-   
-    function lessclick(){
-        if (count >1){
-            setCount (count -1)
-        }
-    }
-
+export default function ItemCount({ stock, initial, onAdd}) {
+	
     
-    function addingToCart (){
-        if (count <= newStock){
-            setNewStock (newStock - count)
-        alert("Producto agregado al carrito",count);
-        setCount(initial)
-        }
-        else {
-            alert("No hay stock");
-        }
-    }
-
-    return (
-        <div className >
-            <h4>Nombre del producto</h4>
-            <div className ="quantityButtonContainer d-flex justify-content-between">
-                <button className ="quantityButton ms-2" onClick={lessclick}> - </button>
-                <p className ="mt-2"> {count} </p>
-                <button className ="quantityButton me-2" onClick={addclick}> + </button>
-            </div>
-            <button className="AddToCartButton" onClick={addingToCart}> Agregar Item</button>
-            <p>Stock disponible: {newStock}</p>
-        </div>
-    )
+    const [ counter, setCounter ] = useState(initial);
+	const contar = val => {
+		if ((stock >= val) && (val >= 0)) {
+			setCounter(val)
+		}
+	}
+	return <div className="counter">
+		<div>
+			<button onClick={() => contar(counter - 1)}>-</button>
+			<span>{counter}</span>
+			<button onClick={() => contar(counter + 1)}>+</button>
+		</div>
+        <button onClick={() => onAdd(counter+' agregados')}>Agregar</button>
+		<button onClick={() => onAdd(counter)}>Agregar</button>
+	</div>
 }
-export default contador;
