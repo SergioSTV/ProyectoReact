@@ -1,8 +1,8 @@
 import React from 'react'
-import ItemCount from './Counter/ItemCount'
+import ItemCount from '../Counter/ItemCount';
 
 import { useEffect, useState } from "react";
-import ItemList from "../ItemList";
+import ItemList from '../ItemList/ItemList';
 
 const jpg = 'G:\fitcommerce\imagenes\suple.png';
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import Item from '../Item/Item.js';
-import ItemCount from '../ItemCount/ItemCount.js';
+import ItemCount from '../Counter/ItemCount.js';
 
 function ItemList({ items }) {
   return (
@@ -16,4 +16,4 @@ function ItemList({ items }) {
           </>
         )
       }
-      export default ItemList
+      export default ItemList;
