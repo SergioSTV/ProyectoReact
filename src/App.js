@@ -1,35 +1,86 @@
-import logo from './logo.svg';
 import './App.css';
-import NavBar from './components/NavBar/NavBar';
-import ItemListContainer from './components/ItemListContainer/ItemListContainer';
-import contador from './components/Counter/ItemCount';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {React, useState } from 'react';
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 
 
+import { NavBar } from './components/NavBar.js';
+import { ItemListContainer } from './components/ItemListContainer/ItemListContainer.js';
+import { ItemDetailContainer } from './components/ItemDetailContainer/ItemDetailContainer.js';
+import { Category } from './components/Category.js';
+import { CartProvider } from './context/CartContext.js';
+import { Cart } from './components/ItemDetailContainer/Cart.js';
 
 function App() {
+  const styles = {
+    backgroundColor: "#1F4489",
+  } 
+
+  const [modalShow, setModalShow] = useState(true);
+
   return (
-    <div className="App">
+    <CartProvider>
       <BrowserRouter>
-        <NavBar />
-        <header className="App-header">
-            <Switch>
-              <Route path="/item/:id" >
-                <ItemDetailContainer />
-              </Route>
-              <Route path="/category/:name" >
+      <NavBar />
+        <Switch>
+          <Route exact path="/">
+          <div className="App">
+              <header style={styles} className="App-header">
+              <Header text="We Fit, Suplementos" />
+                <Logo />
+                
+              </header>
+              <section> 
+                <Title text="Estas en la Home" />
                 <ItemListContainer />
-              </Route>
-              <Route exact path="/">
+              </section>
+            </div>
+          </Route>
+        
+          <Route exact path="/category/:categoryId">
+          <div className="App">
+              <header style={styles} className="App-header">
+              <Header text="We Fit, Suplementos" />
+                <Logo />
+                
+              </header>
+              <section> 
+                <Category />
                 <ItemListContainer />
-              </Route>
-              <Route path="*">
-                Comming soon
-              </Route>
-            </Switch>
-        </header>
+              </section>
+            </div>
+          </Route>
+
+          <Route exact path="/item/:itemId">
+          <div className="App">
+              <header style={styles} className="App-header">
+              <Header text="We Fit, Suplementos" />
+                <Logo />
+                
+              </header>
+              <section> 
+                <ItemDetailContainer/>
+              </section>
+            </div>
+          </Route>
+
+          <Route exact path="/Cart" >
+          <div className="App">
+              <header style={styles} className="App-header">
+                <Header text="We Fit, Suplementos" />
+                <Logo />
+                
+              </header>
+              <section> 
+                <Cart show={modalShow}  />
+              </section>
+            </div>
+          </Route>
+
+        </Switch>
       </BrowserRouter>
-    </div>
+    </CartProvider>
   );
 }
 
