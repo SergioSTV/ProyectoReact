@@ -1,31 +1,54 @@
-import React from 'react'
-import ItemCount from '../Counter/ItemCount';
-
-import { useEffect, useState } from "react";
-import ItemList from '../ItemList/ItemList';
-
-const jpg = 'G:\fitcommerce\imagenes\suple.png';
-
-const items = [
-	{ id:1, title:'Creatina', price:5000.00, stock:1, pictureUrl:jpg},
-	{ id:2, title:'Proteína', price:6500.00, stock:19, pictureUrl:jpg},
-	{ id:3, title:'Colágeno', price:1500.00, stock:4, pictureUrl:jpg},
-	
-]
-
-const task = new Promise((res, rej) => {
-	setTimeout(() => res(items), 2000)
-});
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import getCategories, { getCategory } from "../services/getData";
+import ItemList from "./ItemList";
+import './styles/ItemListContainer.css'
 
 export default function ItemListContainer() {
-	const [ itemlist, setItemlist ] = useState([]);
+	const [ categories, setCategories ] = useState([]);
+	const [ loading, setLoading ] = useState(false);
+	const amountDisplayed = React.useRef(true)
+	const { name } = useParams();
 
-	useEffect(()=>{
-		task.then(res => setItemlist(res), err => setItemlist(err));
-		console.log(itemlist);
-	}, [itemlist])
 
-	return <div className="item-list-container">
-		<ItemList items={itemlist} />
-	</div>
+	const capitalize = word => {
+		word = word.split('')
+		word[0] = word[0].toUpperCase()
+		return word.join('')
+	}
+
+
+	const setHooks = (res,all) => {
+		amountDisplayed.current = all ? 4 : true
+		setCategories(all ? res : [{id:res.id, ...res.data()}])
+		setLoading(false)
+	}
+
+
+	React.useEffect(() => {
+		setLoading(true);
+
+		if (name) {
+			
+			getCategory(name).then(res => { setHooks(res,false) })
+		} else {
+			
+			getCategories().then(res => { setHooks(res,true) });
+		}
+
+	}, [name])
+
+
+	const categoriesList = categories.map(category => 
+		<div key={category.name} className="category flx-clmn-ctr">
+		<p>{category.icon} {capitalize(category.name)}</p>
+		<div className="item-list-container">
+			<ItemList categoryName={category.name} categoryId={category.id} render={amountDisplayed.current} />
+		</div>
+	</div>)
+	
+	
+	if (loading) return <h1 className="loading">🕛</h1>
+
+	return <div className="categories">{categoriesList}</div>
 }

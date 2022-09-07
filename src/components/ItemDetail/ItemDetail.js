@@ -1,52 +1,73 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import ItemCount from './ItemCount'
-import CartContext from '../context/CartContext'
-import './styles/ItemDetail.css'
+import React, {useState} from 'react';
+import ItemCount from '../../components/ItemCount.js';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { useCart } from "../../context/CartContext.js"
+import { Link } from "react-router-dom";
 
-export default function ItemDetail(item) {
-	const [ selectedCount, setSelectedCount ] = React.useState(0)
-	const { addItem, getProduct } = React.useContext(CartContext)
-	const { id, title, description, price, pictureUrl, stock } = item
+export const ItemDetail = (props) => {
 
-	const addHandler = (quantity = 0) => {
-		setSelectedCount(quantity)
-	}
+    const {addItem, removeItem} = useCart();
 
-	
-	const onCartQuantity = getProduct(id)?.quantity || 0
+    //Defino estado para el componente ItemCount
+    const [counter, setCounter] = useState(1);
 
-	
-	const virtualStock = stock - onCartQuantity
+    const addCounter = () => {
+        if (counter < props.stock){
+        setCounter(counter + 1)
+        } else {
+        alert("LLego al máximo de stock de este producto")
+        }
+    }
+    
+    const removeCounter = () => {
+        if (counter > 1){
+        setCounter(counter - 1)
+        } else {
+        alert("LLego al mínimo de stock de este producto")
+        }
+    }
 
-	
-	const virtualPrice = selectedCount > 1 ? `${price * selectedCount} (x${selectedCount})` : price
+    const addToCart = () => {
+      if (counter != 0){
+        let item = {id: props.id, name: props.name, stockInCart: counter, priceInCart: (props.price*counter)};
+        addItem( item );
+      } else {
+        alert("No se pueden agregar 0 unidades al carrito!");
+      }
+    }
 
-	if (item.loading) return <h1 className="loading">🕛</h1>
+    const removeFromCart = () => {
+      removeItem( props.id );
+    }
 
-	return <div className="item-detail">
-		<img src={pictureUrl} alt={title}/>
+    return (
+        <Modal
+          {...props}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+                {props.name}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+              <img src={props.pictureUrl} alt={props.name} title={props.name} />
+              <p><strong>Unidades disponibles:</strong> {props.stock}</p>
+              <p><strong>Precio por unidad:</strong> {props.price}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <ItemCount value={counter} onAddCounter={addCounter} onRemoveCounter={removeCounter} />
+            <Button onClick={addToCart}>Agregar al carrito</Button>
+            <Button onClick={removeFromCart}>Remover del carrito</Button>
+            <Link to="/"><Button>Volver al Catálogo/Seguir comprando</Button></Link>
+            <Link to="/Cart"><Button>Ir al Carrito</Button></Link>
+          </Modal.Footer>
+        </Modal>
+    );
 
-		<div className="detail">
-			<div className="info">
-				<h3>{title || '🕛'}</h3>
-				<p>{description}</p>
-				<p style={{color:'#f90'}} >ARS {virtualPrice}</p>
-			</div>
-
-			<div className="selection">
-				{selectedCount > 0 
-					
-					? <Link 
-						to="/cart" 
-						className="btn1" 
-						onClick={() => addItem(item, selectedCount)}
-					>Agregar {selectedCount} al carrito</Link>
-					
-					: <ItemCount stock={virtualStock} initial={0} onAdd={addHandler} />
-				}
-			</div>
-			{selectedCount > 0 && <button id="cancel" onClick={addHandler}>cancelar</button>}
-		</div>
-	</div>
 }
+
+export default ItemDetail;

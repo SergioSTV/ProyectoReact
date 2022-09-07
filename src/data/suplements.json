@@ -1,0 +1,17 @@
+[
+    {
+      "id": "01",
+      "price": 5000,
+      "name": "Creatina",
+      "stock": 15,
+      "pictureUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW1UTILHKc4B6cx8vxJDLCo99HWyKCbEb3KQ&usqp=CAU"
+      
+    },
+    {
+      "id": "02",
+      "price": 3000,
+      "name": "Colágeno",
+      "stock": 20, 
+      "pictureUrl": "https://www.suplerfit.com.mx/site/wp-content/uploads/2021/03/She-fit-colageno-hydrolizado-300-gramos.png"
+      
+    }]

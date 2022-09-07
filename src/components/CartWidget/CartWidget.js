@@ -1,10 +1,23 @@
-import React from 'react'
-import cartImg from "imagenes\carritocompras.png";
+import cartIcon from '../imagenes/carritocompras.png';
+import { useCart } from "../context/CartContext.js";
 
-const CartWidget = () => {
+const styles = {
+    width: "50px",
+  } 
+
+export const CartWidget = () => {
+
+    const {cart} = useCart();
+
     return (
-        <img src={cartImg} alt="Carrito" className='Carrito' />
+
+        <>
+        <img src={cartIcon} alt="Cart" style={styles} />
+        {
+        cart.length ? (<span className="counter" >{cart.length}</span>) : ("")
+        }
+        </>
     )
 }
 
-export default CartWidget
+export default CartWidget;

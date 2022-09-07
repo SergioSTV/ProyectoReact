@@ -1,17 +1,43 @@
-import { useEffect, useState } from "react"
-import ItemDetail from "../ItemDetail";
+import { useEffect, useState } from 'react';
+import { useParams } from "react-router-dom";
+import Item from '../ItemListContainer/Item.js';
+import { Link } from "react-router-dom";
+import { getFirestore } from '../../firebase';
+// import { doc, getDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
-const getItems = new Promise((res,rej) => {
-    setTimeout(() => res({ id:1, title:'Creatina', price:5000.00, stock:1, pictureUrl:jpg}), 2000);
-})
+export const ItemDetailContainer = (props) => {
 
-export default function ItemDetailContainer() {
-	const [ item, setItem ] = useState({});
-	const { id } = useParams();
+    const { itemId } = useParams();
 
-	useEffect(() => {
-        getProductById(parseInt(id)).then(res => setItem(res))
-	},[id])
+    const [suplements, setSuplements] = useState([]);
 
-	return <ItemDetail {...item} />
+
+    useEffect(() => {
+
+      
+      const db = getFirestore();
+            
+      getDocs(collection(db, "items"))
+        .then((snapshot) => {
+           setSuplements(snapshot.docs.map( (doc) => doc.data() ) );
+           
+        });
+    }, []);
+  
+    return (
+        <>
+          {
+          suplements.length ?
+          suplements.map((suple) => {
+              if (itemId === suple.id){
+                return(<Link to={`../item/${suple.id}`}><Item showModal={true} suplement={suple} key={suple.id} /></Link>)
+              }
+            })
+          : "Loading..."
+          }
+        </>
+      )
 }
+
+export default ItemDetailContainer;

@@ -14,7 +14,7 @@ import { Cart } from './components/ItemDetailContainer/Cart.js';
 
 function App() {
   const styles = {
-    backgroundColor: "#1F4489",
+    backgroundColor: "#9F33FF",
   } 
 
   const [modalShow, setModalShow] = useState(true);

@@ -1,19 +1,26 @@
-import React from 'react'
-import Item from '../Item/Item.js';
-import ItemCount from '../Counter/ItemCount.js';
+import Item from './Item.js';
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function ItemList({ items }) {
-  return (
-    <>
-    { items.map(thisitem => {
-      return (
-        <Container key={thisitem.id}>
-        <Item item={thisitem.id} name={thisitem.name} description={thisitem.description} price={thisitem.price}/>
-        <ItemCount stock={thisitem.stock} initial={1} itemName={thisitem.name} onAdd={thisitem.onAdd} />
-        </Container>
-            )
-          })}
-          </>
-        )
-      }
-      export default ItemList;
+export const ItemList = ({info}) => {
+
+    const { categoryId } = useParams();
+
+    return (
+      <>
+        {
+        info.length ?
+          info.map((suple) => {
+          
+            if (categoryId === undefined) {
+              return(<Link to={`../item/${suple.id}`}><Item showModal={false} suplement={suple} key={suple.id} /></Link>)
+            }
+          })
+        : "Loading..."
+        }
+      </>
+    )
+
+}
+
+export default ItemList;
